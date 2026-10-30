@@ -36,7 +36,38 @@
             margin-top: 10px;
         }
 
-        h2 { margin-bottom: 16px; font-size: 1.3rem; text-align: center; }
+        /* 頂部導覽按鈕區塊 */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            background-color: #e5e7eb;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #d1d5db;
+        }
+
+        h2 { 
+            font-size: 1.3rem; 
+            text-align: center;
+            flex: 1;
+        }
 
         .refresh-btn {
             width: 100%;
@@ -88,6 +119,11 @@
 <body>
 
 <div class="card">
+    <!-- 頂部列：新增返回首頁按鈕 -->
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">🏠 返回首頁</a>
+    </div>
+
     <h2>📋 已借出設備清單</h2>
     <button class="refresh-btn" onclick="loadBorrowedList()">🔄 重新整理清單</button>
 
@@ -97,6 +133,7 @@
 </div>
 
 <script>
+    // ★請確認這裡貼的是與 index.html 相同的 GAS Web App 網址★
     const API_URL = "https://script.google.com/macros/s/AKfycbz8SKhCct8XraaHN0cgbvKe6FW6gDaRInr6i8fX28NY4HBh5xw1h27TqBaWD09hkOW-Cw/exec";
 
     function loadBorrowedList() {
@@ -139,11 +176,11 @@
             })
             .catch(err => {
                 console.error(err);
-                container.innerHTML = '<div class="empty-msg" style="color:red;">❌ 載入失敗，請確認網路或 API 網址</div>';
+                container.innerHTML = '<div class="empty-msg" style="color:red;">❌ 載入失敗，請確認 API 網址或重新發布 GAS 新版本</div>';
             });
     }
 
-    // 網頁開啟時自動載入資料
+    // 網頁載入時自動執行一次
     loadBorrowedList();
 </script>
 </body>
