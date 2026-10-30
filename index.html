@@ -8,9 +8,7 @@
     <style>
         :root {
             --primary-color: #4f46e5;
-            --primary-hover: #4338ca;
             --success-color: #10b981;
-            --danger-color: #ef4444;
             --bg-color: #f3f4f6;
             --card-bg: #ffffff;
             --text-main: #1f2937;
@@ -20,12 +18,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
             padding: 16px;
         }
@@ -33,21 +31,48 @@
         .card {
             background: var(--card-bg);
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
             border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             padding: 24px;
+            margin-top: 10px;
             text-align: center;
         }
 
-        h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--text-main);
+        /* 導覽列連結 */
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        /* 模式切換按鈕 */
+        .nav-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .nav-btn.external {
+            background-color: #e5e7eb;
+            color: var(--text-main);
+            border: 1px solid #d1d5db;
+        }
+
+        .nav-btn.external:hover {
+            background-color: #d1d5db;
+        }
+
+        /* 借歸還切換 */
         .mode-toggle {
             display: flex;
             background: #e5e7eb;
@@ -66,40 +91,21 @@
             cursor: pointer;
             background: transparent;
             color: var(--text-sub);
-            transition: all 0.2s ease;
         }
 
-        .mode-btn.active-borrow {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
-        }
-
-        .mode-btn.active-return {
-            background: var(--success-color);
-            color: white;
-            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
-        }
+        .mode-btn.active-borrow { background: var(--primary-color); color: white; }
+        .mode-btn.active-return { background: var(--success-color); color: white; }
 
         select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
             font-size: 0.9rem;
             border-radius: 8px;
             border: 1px solid #d1d5db;
-            background-color: #f9fafb;
-            color: var(--text-main);
             margin-bottom: 16px;
-            outline: none;
         }
 
-        #reader {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-        }
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; background: #000; }
 
         #result {
             margin-top: 16px;
@@ -107,20 +113,14 @@
             border-radius: 10px;
             font-size: 0.95rem;
             font-weight: 600;
-            line-height: 1.5;
-            min-height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             white-space: pre-wrap;
             background: #f9fafb;
             border: 1px solid #e5e7eb;
-            color: var(--text-sub);
         }
 
-        .status-loading { color: var(--primary-color); background: #eef2ff !important; border-color: #c7d2fe !important; }
-        .status-success { color: #065f46; background: #d1fae5 !important; border-color: #a7f3d0 !important; }
-        .status-error { color: #991b1b; background: #fee2e2 !important; border-color: #fca5a5 !important; }
+        .status-loading { color: var(--primary-color); background: #eef2ff !important; }
+        .status-success { color: #065f46; background: #d1fae5 !important; }
+        .status-error { color: #991b1b; background: #fee2e2 !important; }
     </style>
 </head>
 <body>
@@ -128,56 +128,45 @@
 <div class="card">
     <h2>📷 設備掃描借還系統</h2>
 
-    <!-- 模式選擇 -->
+    <!-- 頂部導覽：點擊右邊會開啟新分頁 -->
+    <div class="nav-links">
+        <span class="nav-btn active">📷 掃描借還</span>
+        <a href="list.html" target="_blank" class="nav-btn external">📋 開啟借出清單 ↗</a>
+    </div>
+
     <div class="mode-toggle">
         <button id="btn-borrow" class="mode-btn active-borrow" onclick="setMode('borrow')">📤 設備借用</button>
         <button id="btn-return" class="mode-btn" onclick="setMode('return')">📥 設備歸還</button>
     </div>
 
-    <!-- 鏡頭選擇下拉選單 -->
     <select id="camera-select">
         <option value="">載入相機清單中...</option>
     </select>
 
-    <!-- 掃描區域 -->
     <div id="reader"></div>
-
-    <!-- 訊息提示框 -->
-    <div id="result" class="status-normal">正在啟動相機...</div>
+    <div id="result">正在啟動相機...</div>
 </div>
 
 <script>
-    // ★★★ 請確保貼上您重新發布後的 GAS Web App 網址 ★★★
-    const API_URL = "https://script.google.com/macros/s/AKfycbx75_V3SIHpr1bJIL3kgbRFH3gtV6gLUSEDGRckP5vFv9BrqaimHCGG015_9Ej2XwtF4g/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzKOj-VImQJKXeHA08DHCWPQoROM6m578I7cGvBMjW6bcDCiXnZ74jH7yMYVZhHYcMI4w/exec";
 
-    let currentMode = "borrow"; // "borrow" 或 "return"
+    let currentMode = "borrow";
     let isProcessing = false;
     const html5QrCode = new Html5Qrcode("reader");
     const config = { fps: 10, qrbox: { width: 220, height: 220 } };
-    
+
     const cameraSelect = document.getElementById('camera-select');
     const resultDiv = document.getElementById('result');
-    const btnBorrow = document.getElementById('btn-borrow');
-    const btnReturn = document.getElementById('btn-return');
 
-    // 切換模式 (借用 / 歸還)
     function setMode(mode) {
         currentMode = mode;
-        if (mode === 'borrow') {
-            btnBorrow.className = 'mode-btn active-borrow';
-            btnReturn.className = 'mode-btn';
-        } else {
-            btnBorrow.className = 'mode-btn';
-            btnReturn.className = 'mode-btn active-return';
-        }
-        if (!isProcessing) {
-            updateStatusText("請對準 QR Code 進行掃描...");
-        }
+        document.getElementById('btn-borrow').className = mode === 'borrow' ? 'mode-btn active-borrow' : 'mode-btn';
+        document.getElementById('btn-return').className = mode === 'return' ? 'mode-btn active-return' : 'mode-btn';
+        if (!isProcessing) updateStatusText("請對準 QR Code 進行掃描...");
     }
 
     function updateStatusText(text, statusClass = '') {
-        resultDiv.className = '';
-        if (statusClass) resultDiv.classList.add(statusClass);
+        resultDiv.className = statusClass;
         resultDiv.innerText = text;
     }
 
@@ -185,37 +174,28 @@
         if (isProcessing) return;
         isProcessing = true;
 
-        // 解析 ID
         let targetId = decodedText.trim();
-        if (targetId.includes("text=")) {
-            targetId = targetId.split("text=")[1].split("&")[0];
-        } else if (targetId.includes("id=")) {
-            targetId = targetId.split("id=")[1].split("&")[0];
-        }
+        if (targetId.includes("text=")) targetId = targetId.split("text=")[1].split("&")[0];
+        else if (targetId.includes("id=")) targetId = targetId.split("id=")[1].split("&")[0];
 
         const actionText = currentMode === 'borrow' ? '借用' : '歸還';
-        updateStatusText(`讀取成功！ID: ${targetId}\n正在處理【${actionText}】請求...`, 'status-loading');
+        updateStatusText(`讀取成功！ID: ${targetId}\n處理【${actionText}】中...`, 'status-loading');
 
-        // 發送 API 請求
-        const requestUrl = `${API_URL}?id=${encodeURIComponent(targetId)}&action=${currentMode}`;
-
-        fetch(requestUrl, {
+        fetch(`${API_URL}?id=${encodeURIComponent(targetId)}&action=${currentMode}`, {
             method: "GET",
             redirect: "follow"
         })
-        .then(response => response.text())
+        .then(res => res.text())
         .then(text => {
             const isSuccess = text.includes("成功");
             updateStatusText(text, isSuccess ? 'status-success' : 'status-error');
-
             setTimeout(() => {
                 isProcessing = false;
                 updateStatusText("請對準下一個 QR Code 進行掃描...");
             }, 3500);
         })
-        .catch(error => {
-            console.error("Fetch Error:", error);
-            updateStatusText("❌ 連線失敗，請檢查網路狀態！", 'status-error');
+        .catch(err => {
+            updateStatusText("❌ 連線失敗，請檢查網路！", 'status-error');
             setTimeout(() => { isProcessing = false; }, 3500);
         });
     }
@@ -223,13 +203,9 @@
     function startCamera(cameraId) {
         html5QrCode.start(cameraId, config, onScanSuccess)
             .then(() => { updateStatusText("請對準 QR Code 進行掃描..."); })
-            .catch(err => {
-                console.error(err);
-                updateStatusText("⚠️ 相機啟動失敗，請確認相機權限。", 'status-error');
-            });
+            .catch(err => updateStatusText("⚠️ 相機啟動失敗", 'status-error'));
     }
 
-    // 初始化相機清單
     Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
             cameraSelect.innerHTML = "";
@@ -240,7 +216,6 @@
                 cameraSelect.appendChild(option);
             });
 
-            // 優先選擇後置鏡頭
             const backCamera = devices.find(d => 
                 d.label.toLowerCase().includes('back') || 
                 d.label.toLowerCase().includes('rear') ||
@@ -252,20 +227,12 @@
             startCamera(defaultId);
 
             cameraSelect.addEventListener('change', () => {
-                updateStatusText("正在切換鏡頭...", 'status-loading');
-                html5QrCode.stop().then(() => {
-                    startCamera(cameraSelect.value);
-                }).catch(err => {
-                    startCamera(cameraSelect.value);
-                });
+                html5QrCode.stop().then(() => startCamera(cameraSelect.value));
             });
         } else {
-            updateStatusText("⚠️ 找不到可用的相機裝置。", 'status-error');
+            updateStatusText("⚠️ 找不到相機裝置", 'status-error');
         }
-    }).catch(err => {
-        console.error(err);
-        updateStatusText("⚠️ 無法存取相機，請檢查瀏覽器權限設定。", 'status-error');
-    });
+    }).catch(err => updateStatusText("⚠️ 無法取得相機權限", 'status-error'));
 </script>
 </body>
 </html>
